@@ -8,12 +8,17 @@ require('dotenv').config();
 app.use(cors());
 
 
-//callback for /location route
 
+
+
+
+//--- CALLBACK FUNCTIONS ------
+
+
+//callback for /location route
 let getLocation = (request, response) => {
   let searchQuery = request.query.data;
   const geoDataResults = require('./data/geo.json');
-  //   const darkSkyResults = require('./data/darksky.json');
   const theLocation = new Location(searchQuery, geoDataResults);
 
 
@@ -27,12 +32,12 @@ let getWeather = (request, response) => {
   const dailyArray = darkskyDataArray.map(day => {
     return new Weather(day)
   })
-  response.send(dailyArray)
+  response.send(dailyArray);
 }
 
+// ------ END -----
 
-
-// constructor funtions
+//-------- constructor funtions
 function Location(searchQuery, geoDataResults) {
   this.search_query = searchQuery;
   this.formatted_query = geoDataResults.results[0].formatted_address;
@@ -44,13 +49,15 @@ function Weather(darkskyData){
   this.forecast = darkskyData.summary;
 }
 
+// --------- END --------
 
 
 
 
 
-app.get('/weather', getWeather());
-app.get('/location', getLocation());
+app.get('/location', getLocation);
+app.get('/weather', getWeather);
+
 
 
 //listen
