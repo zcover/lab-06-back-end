@@ -26,11 +26,11 @@ function getLocation(request, response){
   console.log(searchQuery)
   let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchQuery}&key=${process.env.GEOCODE_API_KEY}`;
   
-  
+  // console.log(superagentResults);
+
   superagent.get(url).then(superagentResults => {
-    console.log(superagentResults.body);
     let results = superagentResults.body.results[0];
-    console.log('results: ', results)
+    // console.log('results: ', results)
     const formatted_address = results.formatted_address;
     const lat = results.geometry.location.lat;
     const long = results.geometry.location.lng;
@@ -46,8 +46,13 @@ function getLocation(request, response){
 
 }
 
-//callback for /weather route
 function getWeather(request, response){
+  
+  console.log('This is the response derp :');
+  console.log(response);
+
+  // const weatherUrl = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${lat},${long}`;
+  
   const darkSkyResults = require('./data/darksky.json');
   let darkskyDataArray = darkSkyResults.daily.data;
   const dailyArray = darkskyDataArray.map(day => {
@@ -55,6 +60,17 @@ function getWeather(request, response){
   })
   response.send(dailyArray);
 }
+
+//callback for /weather route
+
+// function getWeather(request, response){
+//   const darkSkyResults = require('./data/darksky.json');
+//   let darkskyDataArray = darkSkyResults.daily.data;
+//   const dailyArray = darkskyDataArray.map(day => {
+//     return new Weather(day)
+//   })
+//   response.send(dailyArray);
+// }
 
 // ------ END -----
 
@@ -65,6 +81,7 @@ function Location(searchQuery,formatted_address, lat, long) {
   this.latitude = lat;
   this.longitude = long;
 }
+
 function Weather(darkskyData){
   this.time = new Date(darkskyData.time).toDateString();
   this.forecast = darkskyData.summary;
