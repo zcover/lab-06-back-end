@@ -28,7 +28,7 @@ function getLocation(request, response){
 
   superagent.get(url).then(superagentResults => {
     let results = superagentResults.body.results[0];
-    console.log('results: ', results)
+    // console.log('results: ', results)
     const formatted_address = results.formatted_address;
     const lat = results.geometry.location.lat;
     const long = results.geometry.location.lng;
@@ -45,6 +45,7 @@ function getLocation(request, response){
 
 //callback for /weather route
 function getWeather(request, response){
+  console.log(request.query)
   const darkSkyResults = require('./data/darksky.json');
   let darkskyDataArray = darkSkyResults.daily.data;
   const dailyArray = darkskyDataArray.map(day => {
@@ -68,16 +69,6 @@ function Weather(darkskyData){
 }
 
 // --------- END --------
-
-
-
-
-
-
-
-
-
-
 
 
 
