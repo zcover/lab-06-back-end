@@ -15,9 +15,6 @@ const PORT = process.env.PORT || 3000;
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
 
-// !!! does not work  !!!
-app.get('/events', getEvents)
-
 // =========================
 
 //--- CALLBACK FUNCTIONS ------
@@ -76,9 +73,7 @@ function Location(searchQuery, formatted_address, lat, long) {
 }
 
 function Weather(darkskyData) {
-  // this.time = darkskyData.time;
   this.time = new Date(darkskyData.time * 1000).toDateString();
-  // this.time = new Date(darkskyData.time).toDateString();
   this.forecast = darkskyData.summary;
 }
 
