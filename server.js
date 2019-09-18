@@ -24,9 +24,11 @@ app.get('/weather', getWeather);
 function getLocation(request, response){
   let searchQuery = request.query.data;
   console.log(searchQuery)
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchQuery}&key=${process.env.GEOCODE_API_KEY}`
-
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchQuery}&key=${process.env.GEOCODE_API_KEY}`;
+  
+  
   superagent.get(url).then(superagentResults => {
+    console.log(superagentResults.body);
     let results = superagentResults.body.results[0];
     console.log('results: ', results)
     const formatted_address = results.formatted_address;
@@ -37,8 +39,9 @@ function getLocation(request, response){
 
     response.send(newLocation);
   }).catch(error => {
-    response.status(500).send(error.message);
+    console.log('=====================halp');
     console.error(error);
+    response.status(500).send(error.message);
   })
 
 }
