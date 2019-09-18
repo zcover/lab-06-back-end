@@ -6,7 +6,7 @@ const cors = require('cors');
 const superagent = require('superagent');
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT||3000;
+const PORT = process.env.PORT || 3000;
 
 
 
@@ -21,14 +21,16 @@ app.get('/weather', getWeather);
 
 
 //callback for /location route *needs to be regular funcion, NOT arrow => function
-function getLocation(request, response){
+function getLocation(request, response) {
   let searchQuery = request.query.data;
   console.log(searchQuery)
-  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchQuery}&key=${process.env.GEOCODE_API_KEY}`
+  let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchQuery}&key=${process.env.GEOCODE_API_KEY}`;
+
+  // console.log(superagentResults);
 
   superagent.get(url).then(superagentResults => {
     let results = superagentResults.body.results[0];
-    console.log('results: ', results)
+    // console.log('results: ', results)
     const formatted_address = results.formatted_address;
     const lat = results.geometry.location.lat;
     const long = results.geometry.location.lng;
@@ -37,33 +39,73 @@ function getLocation(request, response){
 
     response.send(newLocation);
   }).catch(error => {
+    console.log('=====================halp');
+    console.error(error);
+    response.status(500).send(error.message);
+  })
+
+}
+
+function getWeather(request, response) {
+
+  console.log('This is the response derp :');
+
+  // let requestQueryData = request.query.data;
+
+  let lat = request.query.data.latitude;
+  let long = request.query.data.latitude;
+
+  const weatherUrl = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${lat},${long}`;
+
+  // const darkSkyResults = require('./data/darksky.json');
+
+  superagent.get(weatherUrl).then(superagentResults => {
+
+    // console.log(superagentResults.body.daily.data[0]);
+
+    let darkskyDataArray = superagentResults.body.daily.data;
+
+    const dailyArray = darkskyDataArray.map(day => {
+      return new Weather(day)
+    });
+    response.send(dailyArray);
+  }) .catch(error => {
+
     response.status(500).send(error.message);
     console.error(error);
-  })
+
+  });
 
 }
+
+
+
 
 //callback for /weather route
-function getWeather(request, response){
-  const darkSkyResults = require('./data/darksky.json');
-  let darkskyDataArray = darkSkyResults.daily.data;
-  const dailyArray = darkskyDataArray.map(day => {
-    return new Weather(day)
-  })
-  response.send(dailyArray);
-}
+
+// function getWeather(request, response){
+//   const darkSkyResults = require('./data/darksky.json');
+//   let darkskyDataArray = darkSkyResults.daily.data;
+//   const dailyArray = darkskyDataArray.map(day => {
+//     return new Weather(day)
+//   })
+//   response.send(dailyArray);
+// }
 
 // ------ END -----
 
 //-------- constructor funtions
-function Location(searchQuery,formatted_address, lat, long) {
+function Location(searchQuery, formatted_address, lat, long) {
   this.search_query = searchQuery;
   this.formatted_query = formatted_address;
   this.latitude = lat;
   this.longitude = long;
 }
-function Weather(darkskyData){
-  this.time = new Date(darkskyData.time).toDateString();
+
+function Weather(darkskyData) {
+  // this.time = darkskyData.time;
+  this.time = new Date(darkskyData.time * 1000).toDateString();
+  // this.time = new Date(darkskyData.time).toDateString();
   this.forecast = darkskyData.summary;
 }
 
@@ -86,4 +128,4 @@ function Weather(darkskyData){
 
 
 //listen
-app.listen(PORT,() => console.log(`listening on ${PORT}`));
+app.listen(PORT, () => console.log(`listening on ${PORT}`));
