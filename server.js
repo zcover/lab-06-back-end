@@ -28,7 +28,7 @@ function getLocation(request, response){
 
   superagent.get(url).then(superagentResults => {
     let results = superagentResults.body.results[0];
-    // console.log('results: ', results)
+    console.log('results: ', results)
     const formatted_address = results.formatted_address;
     const lat = results.geometry.location.lat;
     const long = results.geometry.location.lng;
