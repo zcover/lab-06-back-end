@@ -72,9 +72,9 @@ Actual time needed to complete: 2 hours (lunchbreak)
 
 Number and name of feature: Error handling
 Estimate of time needed to complete: .25 hours
-Start time: n/a
-Finish time: unfinished
-Actual time needed to complete: 
+Start time: 10:30
+Finish time: 10:15
+Actual time needed to complete: 15mins 
 
 --------------------------------------
 ## Wednesday
@@ -86,17 +86,41 @@ Estimate of time needed to complete: 45mins
 
 Start time: 9:45 
 
-Finish time: 
+Finish time: 10:00
 
-Actual time needed to complete: 
+Actual time needed to complete: 15mins
 
 --------------------------------------
 
-Number and name of feature:  Data 
+Number and name of feature:  Location via api
 
 Estimate of time needed to complete: 1 hour
 
-Start time: 
+Start time: 10:00   
+
+Finish time: 10:15
+
+Actual time needed to complete: 15mins
+
+--------------------------------------
+
+Number and name of feature:  Weather via API
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 12:30
+
+Finish time: 1:30
+
+Actual time needed to complete: 1 hour 
+
+--------------------------------------
+
+Number and name of feature:  Eventbrite
+
+Estimate of time needed to complete: 1 hour
+
+Start time: n/a
 
 Finish time: 
 
