@@ -15,6 +15,9 @@ const PORT = process.env.PORT || 3000;
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
 
+// !!! does not work  !!!
+app.get('/events', getEvents)
+
 // =========================
 
 //--- CALLBACK FUNCTIONS ------
