@@ -1,16 +1,20 @@
 'use strict';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT||3000;
+require('dotenv').config()
 const express = require('express');
-const app = express();
 const cors = require('cors');
-require('dotenv').config();
+const superagent = require('superagent');
+const app = express();
 app.use(cors());
 
 
+// ======= Routes ==========
 
+app.get('/location', getLocation);
+app.get('/weather', getWeather);
 
-
+// =========================
 
 //--- CALLBACK FUNCTIONS ------
 
@@ -18,11 +22,19 @@ app.use(cors());
 //callback for /location route
 let getLocation = (request, response) => {
   let searchQuery = request.query.data;
-  const geoDataResults = require('./data/geo.json');
-  const theLocation = new Location(searchQuery, geoDataResults);
 
+  let url = `https://maps.googleapis.com/maps/api/gecode/jason?address=${searchQuery}&key=${process.env.GEOCODE_API_KEY}`;
 
-  response.send(theLocation);
+  superagent.get(url)
+    .then(superagentResults => {
+      let results = superagentResults.body.results[0];
+      const formatted_address = results.formatted_address;
+      const lat = results.geometry.location.lat;
+      const long = results.geometry.location.lng;
+      const location = new Location(searchQuery, formatted_address, lat, long);
+
+      response.send(location);
+    })
 }
 
 //callback for /weather route
@@ -38,11 +50,11 @@ let getWeather = (request, response) => {
 // ------ END -----
 
 //-------- constructor funtions
-function Location(searchQuery, geoDataResults) {
+function Location(searchQuery,formatted_address, lat, long) {
   this.search_query = searchQuery;
-  this.formatted_query = geoDataResults.results[0].formatted_address;
-  this.latitude = geoDataResults.results[0].geometry.location.lat;
-  this.longitude = geoDataResults.results[0].geometry.location.lng;
+  this.formatted_query = formatted_address;
+  this.latitude = lat;
+  this.longitude = long;
 }
 function Weather(darkskyData){
   this.time = new Date(darkskyData.time).toDateString();
@@ -54,9 +66,6 @@ function Weather(darkskyData){
 
 
 
-
-app.get('/location', getLocation);
-app.get('/weather', getWeather);
 
 
 
