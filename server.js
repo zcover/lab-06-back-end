@@ -6,7 +6,7 @@ const cors = require('cors');
 const superagent = require('superagent');
 const app = express();
 app.use(cors());
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 
 
@@ -14,6 +14,9 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/location', getLocation);
 app.get('/weather', getWeather);
+//  DOES NOT WORK !!!!
+
+// app.get('/events', getEvents)
 
 // =========================
 
@@ -43,8 +46,6 @@ function getLocation(request, response) {
     response.status(500).send(error.message);
   })
 }
-
-
 function getWeather(request, response) {
 //   console.log('This is the response derp :');
   let lat = request.query.data.latitude;
@@ -61,6 +62,22 @@ function getWeather(request, response) {
     response.status(500).send(error.message);
     console.error(error);
   });
+}
+function getEvents(request, response) {
+  let long = request.query.data.longitude;
+  let lat = request.query.data.latitude;
+
+  let url = `https://www.eventbriteapi.com/v3/events/search?location.longitude=${long}&location.latitude=${lat}&token=${process.env.EVENTS_API_KEY}`;
+
+  superagent.get(url).then(superagentEventResults => {
+    console.log(superagentEventResults);
+
+
+  }).catch(error => {
+    response.status(500).send(error.message)
+  })
+
+
 }
 // ------ END -----
 
